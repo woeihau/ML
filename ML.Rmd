@@ -35,14 +35,12 @@ The data for this project come from this source: http://groupware.les.inf.puc-ri
 For the purpose of this analysis, the data files have been downloaded to same directory.
 
 ### 3 Library preparation
-``` {r setoptions, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
+``` {r}
     library(caret)    
     library(knitr)
     library(ggplot2)
-    library(dplyr)
     library(randomForest)
     library(rpart)
-    opts_chunk$set(echo=TRUE)
 ```
 
 ### 4 Data Processing

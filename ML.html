@@ -80,6 +80,17 @@ img {
 </div>
 <div id="library-preparation" class="section level3">
 <h3>3 Library preparation</h3>
+<pre class="r"><code>    library(caret)    </code></pre>
+<pre><code>## Loading required package: lattice
+## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>    library(knitr)
+    library(ggplot2)
+    library(randomForest)</code></pre>
+<pre><code>## Warning: package 'randomForest' was built under R version 3.2.2</code></pre>
+<pre><code>## randomForest 4.6-10
+## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="r"><code>    library(rpart)</code></pre>
+<pre><code>## Warning: package 'rpart' was built under R version 3.2.2</code></pre>
 </div>
 <div id="data-processing" class="section level3">
 <h3>4 Data Processing</h3>
@@ -123,7 +134,7 @@ crossValidationData &lt;- training[-inTrain,]</code></pre>
 modelTREE &lt;- rpart(classe~.,data=trainData, method=&quot;class&quot;)
 proc.time() - ptm</code></pre>
 <pre><code>##    user  system elapsed 
-##    5.42    0.04    5.61</code></pre>
+##    5.64    0.04    5.78</code></pre>
 <pre class="r"><code>print(modelTREE)</code></pre>
 <pre><code>## n= 11776 
 ## 
@@ -216,7 +227,7 @@ confusionMatrix(crossValidationData$classe,predictionTREE)</code></pre>
 modelRF &lt;- randomForest(classe~., data=trainData)
 proc.time() - ptm</code></pre>
 <pre><code>##    user  system elapsed 
-##   80.02    0.64   82.83</code></pre>
+##   80.42    0.73   82.47</code></pre>
 <pre class="r"><code>print(modelRF)</code></pre>
 <pre><code>## 
 ## Call:
