@@ -68,7 +68,14 @@ img {
 
 <div id="introduction" class="section level3">
 <h3>1 Introduction</h3>
-<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, my goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants and predict the manner in which they did the exercise. This is the “classe” variable in the training set. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. The five ways are:- - Class A: exactly according to the specification - Class B: throwing the elbows to the front - Class C: lifting the dumbbell only halfway - Class D: lowering the dumbbell only halfway - Class E: throwing the hips to the front</p>
+<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, my goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants and predict the manner in which they did the exercise. This is the “classe” variable in the training set. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. The five ways are:-</p>
+<ul>
+<li>Class A: exactly according to the specification</li>
+<li>Class B: throwing the elbows to the front</li>
+<li>Class C: lifting the dumbbell only halfway</li>
+<li>Class D: lowering the dumbbell only halfway</li>
+<li>Class E: throwing the hips to the front</li>
+</ul>
 <p>Read more: <a href="http://groupware.les.inf.puc-rio.br/har#wle_paper_section#ixzz3jBEmt1mR" class="uri">http://groupware.les.inf.puc-rio.br/har#wle_paper_section#ixzz3jBEmt1mR</a> More information is available from the website here: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a> (see the section on the Weight Lifting Exercise Dataset).</p>
 </div>
 <div id="data-sources" class="section level3">
@@ -134,7 +141,7 @@ crossValidationData &lt;- training[-inTrain,]</code></pre>
 modelTREE &lt;- rpart(classe~.,data=trainData, method=&quot;class&quot;)
 proc.time() - ptm</code></pre>
 <pre><code>##    user  system elapsed 
-##    5.64    0.04    5.78</code></pre>
+##    4.42    0.01    4.78</code></pre>
 <pre class="r"><code>print(modelTREE)</code></pre>
 <pre><code>## n= 11776 
 ## 
@@ -227,7 +234,7 @@ confusionMatrix(crossValidationData$classe,predictionTREE)</code></pre>
 modelRF &lt;- randomForest(classe~., data=trainData)
 proc.time() - ptm</code></pre>
 <pre><code>##    user  system elapsed 
-##   80.42    0.73   82.47</code></pre>
+##   93.31    0.90  103.17</code></pre>
 <pre class="r"><code>print(modelRF)</code></pre>
 <pre><code>## 
 ## Call:

@@ -13,11 +13,12 @@ These type of devices are part of the quantified self movement - a group of enth
 One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
 In this project, my goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants and predict the manner in which they did the exercise. This is the "classe" variable in the training set. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
 The five ways are:-
- - Class A: exactly according to the specification
- - Class B: throwing the elbows to the front
- - Class C: lifting the dumbbell only halfway
- - Class D: lowering the dumbbell only halfway
- - Class E: throwing the hips to the front
+
+ * Class A: exactly according to the specification
+ * Class B: throwing the elbows to the front
+ * Class C: lifting the dumbbell only halfway
+ * Class D: lowering the dumbbell only halfway
+ * Class E: throwing the hips to the front
 
 Read more: http://groupware.les.inf.puc-rio.br/har#wle_paper_section#ixzz3jBEmt1mR
 More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
