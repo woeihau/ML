@@ -1,0 +1,136 @@
+---
+title: 'Machine Learning: Project - Predict the manner in which user did the exercise'
+author: "Low Woei Hau"
+output:
+  html_document: default
+  pdf_document: default
+keep_md: yes
+---
+### 1 Introduction
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. 
+These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. 
+One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
+In this project, my goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants and predict the manner in which they did the exercise. This is the "classe" variable in the training set. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
+The five ways are:-
+ - Class A: exactly according to the specification
+ - Class B: throwing the elbows to the front
+ - Class C: lifting the dumbbell only halfway
+ - Class D: lowering the dumbbell only halfway
+ - Class E: throwing the hips to the front
+
+Read more: http://groupware.les.inf.puc-rio.br/har#wle_paper_section#ixzz3jBEmt1mR
+More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+### 2 Data sources
+
+The training data for this project are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har.
+
+For the purpose of this analysis, the data files have been downloaded to same directory.
+
+### 3 Library preparation
+``` {r setoptions, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
+    library(caret)    
+    library(knitr)
+    library(ggplot2)
+    library(dplyr)
+    library(randomForest)
+    library(rpart)
+    opts_chunk$set(echo=TRUE)
+```
+
+### 4 Data Processing
+
+We need to clear the unwanted data while maintain the classe. Then further split to 60/40 (60% training, 40% cross validation).
+
+```{r}
+    
+#Read the data from CSV files.
+trainCSV <- read.csv("pml-training.csv")
+testCSV <- read.csv("pml-testing.csv")
+
+# keep classe as it is non numeric (will be removed during the processing)
+classe <- trainCSV$classe
+
+# Remove those columns with NA values
+trainCSV2 <- trainCSV[,colSums(is.na(trainCSV))==0]
+testCSV2 <- testCSV[,colSums(is.na(trainCSV))==0]
+
+# Keep only certain columns
+fields <- grepl("dumbbell|arm|belt|classe",names(trainCSV2))
+trainCSV3 <- trainCSV2[,fields]
+testCSV3 <- testCSV2[,fields]
+
+# Retain column that are numeric
+trainCSV4 <- trainCSV3[,sapply(trainCSV3,is.numeric)]
+testCSV4 <- testCSV3[,sapply(testCSV3,is.numeric)]
+# Take note there is extra "problem_id" for test set
+
+# merge back the classe
+training <- trainCSV4
+training$classe <- classe
+testing <- testCSV4
+
+# final split before train with model
+# We split to 60/40 (60% training, 40% cross validation)
+set.seed(12345)
+inTrain <- createDataPartition(training$classe,p=0.6, list=FALSE)
+trainData <- training[inTrain,]
+crossValidationData <- training[-inTrain,]
+```
+
+### 5a Model Selection: Trees
+
+``` {r}
+ptm <- proc.time()
+modelTREE <- rpart(classe~.,data=trainData, method="class")
+proc.time() - ptm
+print(modelTREE)
+
+predictionTREE <- predict(modelTREE,crossValidationData,type="class")
+confusionMatrix(crossValidationData$classe,predictionTREE)
+```
+The low accuracy (~72.7%) denotes that this choice may not be a good fit and the out of sample error is high (1-accuracy= ~27.3%).
+
+### 5b Model Selection: Random Forest
+
+``` {r}
+
+ptm <- proc.time()
+modelRF <- randomForest(classe~., data=trainData)
+proc.time() - ptm
+print(modelRF)
+
+
+predictionRF <- predict(modelRF,crossValidationData)
+confusionMatrix(crossValidationData$classe,predictionRF)
+
+```
+With 99.4% accuracy against cross validation data (60%/40%), this is much better algorightm to go for.
+
+
+### 6 Prediction using chosen model - Random Forest
+
+Now we will start prediction using the random forest model.
+``` {r}
+finalPrediction <- predict(modelRF,testing)
+```
+
+We will populate the 20 answers into 20 different files using function provided in project.
+
+``` {r}
+
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+```
